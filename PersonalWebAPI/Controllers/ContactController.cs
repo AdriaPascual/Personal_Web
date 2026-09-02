@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using PersonalWebCore.Interfaces;
 using PersonalWebCore.Models;
 
@@ -23,24 +24,16 @@ namespace PersonalWebAPI.Controllers
         /// <param name="message">Datos del mensaje</param>
         /// <returns>Confirmación del envío</returns>
         [HttpPost]
+        [EnableRateLimiting("contact")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> SendMessage([FromBody] ContactMessage message)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            // Validaciones básicas
-            if (string.IsNullOrWhiteSpace(message.Name) ||
-                string.IsNullOrWhiteSpace(message.Email) ||
-                string.IsNullOrWhiteSpace(message.Message))
-            {
-                return BadRequest(new { message = "Name, Email and Message are required" });
-            }
-
+            // [ApiController] valida el ModelState (incluidas las DataAnnotations de
+            // ContactMessage: Required, EmailAddress, StringLength) automáticamente
+            // antes de que la acción se ejecute.
             try
             {
                 message.SentDate = DateTime.UtcNow;

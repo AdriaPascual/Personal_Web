@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Globalization;
+using System.Threading.RateLimiting;
 using PersonalWebCore.Interfaces;
 using PersonalWebCore.Services;
 using PersonalWebCore.Helpers;
@@ -66,6 +69,42 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Detrás del proxy de Render, la IP real del visitante llega en X-Forwarded-For.
+// Sin esto, RemoteIpAddress sería siempre la del proxy interno y el rate limiting
+// por IP no distinguiría visitantes.
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+});
+
+// Rate limiting: límite global suave + límite estricto para /api/contact
+// (endpoint alcanzable directamente sin pasar por el frontend/CORS, ya que
+// CORS solo lo aplican los navegadores, no protege frente a llamadas directas).
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 60,
+                Window = TimeSpan.FromMinutes(1)
+            }));
+
+    options.AddPolicy("contact", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromHours(1)
+            }));
+});
+
 // Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -79,6 +118,9 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var app = builder.Build();
+
+// Debe ir antes que cualquier middleware que lea la IP del cliente (CORS, rate limiting).
+app.UseForwardedHeaders();
 
 // ===== INICIALIZAR TextHelpers =====
 var localizerFactory = app.Services.GetRequiredService<Microsoft.Extensions.Localization.IStringLocalizerFactory>();
@@ -116,6 +158,8 @@ app.UseRequestLocalization();
 
 // Autorizaci�n
 app.UseAuthorization();
+
+app.UseRateLimiter();
 
 // Mapear controllers
 app.MapControllers();

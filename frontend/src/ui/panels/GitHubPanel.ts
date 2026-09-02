@@ -1,4 +1,5 @@
 import { getPublicRepos } from '../../services/githubService';
+import { escapeHtml, safeUrl } from '../../utils/htmlUtils';
 
 export async function renderGitHub(): Promise<string> {
   try {
@@ -6,11 +7,11 @@ export async function renderGitHub(): Promise<string> {
     const rows = repos.map(r => `
       <div class="repo-item">
         <div>
-          <a href="${r.html_url}" target="_blank" rel="noopener noreferrer">${r.name}</a>
-          ${r.description ? `<div style="font-size:.7rem;color:#666;margin-top:2px;">${r.description}</div>` : ''}
+          <a href="${safeUrl(r.html_url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(r.name)}</a>
+          ${r.description ? `<div style="font-size:.7rem;color:#666;margin-top:2px;">${escapeHtml(r.description)}</div>` : ''}
         </div>
         <div class="repo-meta">
-          ${r.language ? `<span style="color:#4ecdc4;">${r.language}</span>` : ''}
+          ${r.language ? `<span style="color:#4ecdc4;">${escapeHtml(r.language)}</span>` : ''}
           ${r.stargazers_count ? ` ⭐ ${r.stargazers_count}` : ''}
         </div>
       </div>
