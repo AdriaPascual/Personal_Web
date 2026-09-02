@@ -1,0 +1,31 @@
+[build]
+  command   = "npm run build"
+  publish   = "dist"
+
+# Proxy same-origin: el navegador nunca llama a Azure directamente (evita problemas de CORS).
+# TODO: sustituir __AZURE_API_URL__ por la URL real del App Service una vez creado.
+[[redirects]]
+  from   = "/api/*"
+  to     = "__AZURE_API_URL__/api/:splat"
+  status = 200
+  force  = true
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy     = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://api.github.com; font-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;"
+    X-Frame-Options             = "DENY"
+    X-Content-Type-Options      = "nosniff"
+    Referrer-Policy             = "strict-origin-when-cross-origin"
+    Permissions-Policy          = "camera=(), microphone=(), geolocation=(), payment=()"
+    Strict-Transport-Security   = "max-age=63072000; includeSubDomains; preload"
+
+[[headers]]
+  for = "/data/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

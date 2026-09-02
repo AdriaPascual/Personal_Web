@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Skill_CSharp" xml:space="preserve">
+    <value>C#</value>
+  </data>
+  <data name="Category_Backend" xml:space="preserve">
+    <value>Backend</value>
+  </data>
+  <data name="Skill_DotNet" xml:space="preserve">
+    <value>.NET 6/7/8</value>
+  </data>
+  <data name="Skill_ASPNETCore" xml:space="preserve">
+    <value>ASP.NET Core</value>
+  </data>
+  <data name="Skill_EFCore" xml:space="preserve">
+    <value>Entity Framework Core</value>
+  </data>
+  <data name="Skill_Python" xml:space="preserve">
+    <value>Python</value>
+  </data>
+  <data name="Category_Data" xml:space="preserve">
+    <value>Backend/Data</value>
+  </data>
+  <data name="Skill_VBNet" xml:space="preserve">
+    <value>Vb.Net</value>
+  </data>
+  <data name="Skill_REST" xml:space="preserve">
+    <value>REST API (JWT, OAuth)</value>
+  </data>
+  <data name="Skill_BackgroundServices" xml:space="preserve">
+    <value>Background Services</value>
+  </data>
+  <data name="Skill_JavaScript" xml:space="preserve">
+    <value>JavaScript (ES6+)</value>
+  </data>
+  <data name="Category_Frontend" xml:space="preserve">
+    <value>Frontend</value>
+  </data>
+  <data name="Skill_Bootstrap" xml:space="preserve">
+    <value>Bootstrap 5</value>
+  </data>
+  <data name="Skill_jQuery" xml:space="preserve">
+    <value>jQuery</value>
+  </data>
+  <data name="Skill_SignalR" xml:space="preserve">
+    <value>SignalR</value>
+  </data>
+  <data name="Category_FrontendRealtime" xml:space="preserve">
+    <value>Frontend/Realtime</value>
+  </data>
+  <data name="Skill_WPF" xml:space="preserve">
+    <value>WPF</value>
+  </data>
+  <data name="Category_Desktop" xml:space="preserve">
+    <value>Frontend (Desktop)</value>
+  </data>
+  <data name="Skill_SQLServer" xml:space="preserve">
+    <value>SQL Server</value>
+  </data>
+  <data name="Category_Database" xml:space="preserve">
+    <value>Database</value>
+  </data>
+  <data name="Skill_Pandas" xml:space="preserve">
+    <value>Pandas/NumPy</value>
+  </data>
+  <data name="Category_DataScience" xml:space="preserve">
+    <value>Data Science</value>
+  </data>
+  <data name="Skill_Scikit" xml:space="preserve">
+    <value>Scikit-learn/KNIME</value>
+  </data>
+  <data name="Category_ML" xml:space="preserve">
+    <value>Machine Learning</value>
+  </data>
+  <data name="Skill_ETL" xml:space="preserve">
+    <value>ETL with Python</value>
+  </data>
+  <data name="Category_DataEngineering" xml:space="preserve">
+    <value>Data Engineering</value>
+  </data>
+  <data name="Skill_Docker" xml:space="preserve">
+    <value>Docker</value>
+  </data>
+  <data name="Category_DevOps" xml:space="preserve">
+    <value>DevOps</value>
+  </data>
+  <data name="Skill_Identity" xml:space="preserve">
+    <value>ASP.NET Identity</value>
+  </data>
+  <data name="Category_Security" xml:space="preserve">
+    <value>Security</value>
+  </data>
+  <data name="Skill_Serilog" xml:space="preserve">
+    <value>Serilog / Structured Logging</value>
+  </data>
+  <data name="Category_Monitoring" xml:space="preserve">
+    <value>Security / Monitoring</value>
+  </data>
+  <data name="Skill_Git" xml:space="preserve">
+    <value>Git/GitHub</value>
+  </data>
+  <data name="Category_Tools" xml:space="preserve">
+    <value>Tools</value>
+  </data>
+  <data name="Skill_Agile" xml:space="preserve">
+    <value>Agile/Scrum/XP</value>
+  </data>
+  <data name="Category_Methodologies" xml:space="preserve">
+    <value>Methodologies</value>
+  </data>
+</root>

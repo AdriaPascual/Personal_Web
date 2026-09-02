@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "name": "Fast Food Dataset Analysis",
+    "description": "Análisis exhaustivo de datos y visualización con Python y Jupyter Notebook sobre el dataset de Fast Food de Kaggle.",
+    "technologies": ["Python", "Pandas", "Matplotlib", "Seaborn", "Jupyter Notebook"],
+    "githubUrl": "https://github.com/AdriaPascual/Analysis-of-the-Fast-Food-Dataset-from-Kaggle",
+    "liveUrl": "",
+    "createdDate": "2023-04-11",
+    "isFeatured": true
+  },
+  {
+    "id": 2,
+    "name": "Data Visualization Examples",
+    "description": "Colección de notebooks Python con diversas técnicas de visualización de datos usando Matplotlib, Seaborn y Plotly.",
+    "technologies": ["Python", "Matplotlib", "Seaborn", "Plotly", "Jupyter Notebook"],
+    "githubUrl": "https://github.com/AdriaPascual/data-visualization-examples",
+    "liveUrl": "",
+    "createdDate": "2023-03-20",
+    "isFeatured": false
+  },
+  {
+    "id": 3,
+    "name": "GUI App for Psychologists",
+    "description": "Prototipo de aplicación de escritorio en Python con formularios adaptables para gestión de datos de usuarios.",
+    "technologies": ["Python", "Tkinter", "OOP", "Desktop"],
+    "githubUrl": "https://github.com/AdriaPascual/GUI",
+    "liveUrl": "",
+    "createdDate": "2023-02-09",
+    "isFeatured": false
+  },
+  {
+    "id": 4,
+    "name": "Walking Game",
+    "description": "Juego 2D en PyGame con efectos de sonido, música de fondo y movimiento por teclado.",
+    "technologies": ["Python", "PyGame", "OOP"],
+    "githubUrl": "https://github.com/AdriaPascual/Walking_game",
+    "liveUrl": "",
+    "createdDate": "2023-02-09",
+    "isFeatured": true
+  },
+  {
+    "id": 5,
+    "name": "Spotify API Integration",
+    "description": "Integración con la API de Spotify via OAuth, recuperando y almacenando datos de usuario en formato JSON.",
+    "technologies": ["Python", "Spotify API", "OAuth", "JSON", "Requests"],
+    "githubUrl": "https://github.com/AdriaPascual/API_Spotify",
+    "liveUrl": "",
+    "createdDate": "2023-02-09",
+    "isFeatured": true
+  }
+]

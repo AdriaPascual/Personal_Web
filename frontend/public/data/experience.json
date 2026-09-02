@@ -1,0 +1,62 @@
+{
+  "experience": [
+    {
+      "company": "Unlimioo",
+      "position": "Desarrollador de Software y Aplicaciones Web",
+      "startDate": "2022",
+      "endDate": "Actualidad",
+      "description": "Desarrollo y mantenimiento de aplicaciones web y de escritorio basadas en .NET Core y Python. Implementación de APIs REST, optimización de consultas SQL, gestión de caché y desarrollo de servicios en segundo plano. Integración de APIs externas, despliegue con Docker y diseño de interfaces modernas con Bootstrap y jQuery.",
+      "technologies": ["C#", ".NET Core", "Python", "Entity Framework", "SQL Server", "JavaScript", "Bootstrap", "Docker", "Serilog", "ASP.NET Identity"]
+    },
+    {
+      "company": "ADDA SL",
+      "position": "Técnico en Seguridad Privada",
+      "startDate": "2018",
+      "endDate": "2021",
+      "description": "Diseño, instalación y mantenimiento de sistemas electrónicos aplicados a la seguridad, incluyendo CCTV, control de accesos y redes locales. Gestión de proyectos técnicos y configuración de routers, switches y almacenamiento en la nube.",
+      "technologies": ["CCTV", "Control de Acceso", "LAN", "Routers", "Switches"]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Universidad Internacional de Valencia (VIU)",
+      "degree": "Grado en Ingeniería Informática",
+      "field": "Ingeniería de Software y Sistemas",
+      "startDate": "2025",
+      "endDate": "Actualidad",
+      "description": ""
+    },
+    {
+      "institution": "Universidad Internacional de Valencia (VIU)",
+      "degree": "Experto Universitario en Programación en Python para Ciencia de Datos y Web",
+      "field": "Desarrollo Web y Ciencia de Datos",
+      "startDate": "2022",
+      "endDate": "2022",
+      "description": "Formación en desarrollo web y científico con Python: PyQt, Django, REST APIs, Selenium, SQL/NoSQL, PyGame y metodologías ágiles."
+    },
+    {
+      "institution": "Universitat de Barcelona",
+      "degree": "Grado en Criminología",
+      "field": "Seguridad y Prevención",
+      "startDate": "2018",
+      "endDate": "2022",
+      "description": ""
+    },
+    {
+      "institution": "PixelPro",
+      "degree": "Bootcamp Fullstack Developer",
+      "field": "Desarrollo Web",
+      "startDate": "2022",
+      "endDate": "2022",
+      "description": ""
+    },
+    {
+      "institution": "Femxa",
+      "degree": "Curso de Seguridad Informática en la Empresa",
+      "field": "Seguridad Informática",
+      "startDate": "2021",
+      "endDate": "2021",
+      "description": ""
+    }
+  ]
+}

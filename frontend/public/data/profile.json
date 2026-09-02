@@ -1,0 +1,37 @@
+{
+  "fullName": "Adrià Pascual Cuesta",
+  "title": "Desarrollador .NET Core y Python",
+  "email": "adripascual108@gmail.com",
+  "phone": "+34 627 901 548",
+  "location": "Barcelona, España",
+  "summary": "Desarrollador de software especializado en .NET Core, C#, Python y tecnologías web. Experiencia en arquitectura de software, APIs REST, procesamiento de datos y despliegue en contenedores.",
+  "profileImageUrl": "/assets/profile.jpg",
+  "socialLinks": {
+    "github": "https://github.com/AdriaPascual",
+    "linkedin": "https://linkedin.com/in/adria-pascual-cuesta/"
+  },
+  "skills": [
+    { "name": "C#",                          "category": "Backend",               "level": 90 },
+    { "name": ".NET 6/7/8",                  "category": "Backend",               "level": 85 },
+    { "name": "ASP.NET Core",                "category": "Backend",               "level": 85 },
+    { "name": "Entity Framework Core",       "category": "Backend",               "level": 80 },
+    { "name": "Python",                      "category": "Backend / Data",        "level": 85 },
+    { "name": "VB.Net",                      "category": "Backend",               "level": 70 },
+    { "name": "REST API (JWT, OAuth)",        "category": "Backend",               "level": 80 },
+    { "name": "Background Services",         "category": "Backend",               "level": 75 },
+    { "name": "JavaScript (ES6+)",           "category": "Frontend",              "level": 75 },
+    { "name": "Bootstrap 5",                 "category": "Frontend",              "level": 70 },
+    { "name": "jQuery",                      "category": "Frontend",              "level": 70 },
+    { "name": "SignalR",                     "category": "Frontend / Realtime",   "level": 65 },
+    { "name": "WPF",                         "category": "Frontend (Desktop)",    "level": 70 },
+    { "name": "SQL Server",                  "category": "Database",              "level": 80 },
+    { "name": "Pandas / NumPy",              "category": "Data Science",          "level": 80 },
+    { "name": "Scikit-learn / KNIME",        "category": "Machine Learning",      "level": 75 },
+    { "name": "ETL con Python",              "category": "Data Engineering",      "level": 75 },
+    { "name": "Docker",                      "category": "DevOps",                "level": 70 },
+    { "name": "ASP.NET Identity",            "category": "Security",              "level": 80 },
+    { "name": "Serilog / Logging",           "category": "Security / Monitoring", "level": 75 },
+    { "name": "Git / GitHub",                "category": "Tools",                 "level": 80 },
+    { "name": "Agile / Scrum / XP",          "category": "Methodologies",         "level": 75 }
+  ]
+}

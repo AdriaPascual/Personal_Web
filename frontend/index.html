@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Adrià Pascual — Portfolio interactivo" />
+    <title>Adrià Pascual</title>
+
+    <!-- Open Graph / redes sociales. TODO: sustituir __SITE_URL__ por el dominio real una vez comprado -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Adrià Pascual — Portfolio interactivo" />
+    <meta property="og:description" content="Portfolio personal en forma de videojuego 3D isométrico. Desarrollador .NET Core, C# y Python." />
+    <meta property="og:url" content="__SITE_URL__/" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="loading" data-i18n="loading">Cargando mundo&#8230;</div>
+    <div id="game-container"></div>
+    <div id="ui-overlay" aria-live="polite"></div>
+
+    <!-- Speech bubble on first load — disappears on first move -->
+    <div id="welcome-bubble" role="status">
+      <strong data-i18n="welcome.line1"></strong>
+      <p data-i18n="welcome.line2"></p>
+    </div>
+
+    <!-- Edge vignette flash on blocked movement -->
+    <div id="collision-flash" aria-hidden="true"></div>
+
+    <!-- Virtual D-pad — visible only on touch devices (pointer:coarse) -->
+    <div id="mobile-controls" aria-label="Game controls">
+      <div class="dpad">
+        <button class="dpad-btn dpad-up"    data-key="KeyW" aria-label="Up">▲</button>
+        <button class="dpad-btn dpad-left"  data-key="KeyA" aria-label="Left">◄</button>
+        <button class="dpad-btn dpad-right" data-key="KeyD" aria-label="Right">►</button>
+        <button class="dpad-btn dpad-down"  data-key="KeyS" aria-label="Down">▼</button>
+      </div>
+      <button class="dpad-action" data-key="KeyE" aria-label="Interact">E</button>
+    </div>
+
+    <div id="interact-hint">Pulsa <strong>E</strong> para entrar</div>
+    <div id="controls-hud">
+      <span class="key">W A S D</span> <span data-i18n="controls.move">moverse</span> &nbsp;·&nbsp;
+      <span class="key">E</span> <span data-i18n="controls.enter">entrar</span> &nbsp;·&nbsp;
+      <span class="key">ESC</span> <span data-i18n="controls.close">cerrar</span>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

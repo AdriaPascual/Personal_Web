@@ -1,0 +1,608 @@
+================================================================================
+  PORTFOLIO 3D INTERACTIVO — GUÍA PARA DESARROLLADORES
+  Adrià Pascual Cuesta · adripascual108@gmail.com
+================================================================================
+
+ÍNDICE
+------
+  1.  Visión general
+  2.  Estructura de directorios
+  3.  Cómo iniciar el entorno de desarrollo
+  4.  Frontend: motor 3D (Three.js)
+        4a. GameEngine
+        4b. GameLoop
+        4c. Sistema de tiles
+        4d. Player3D
+        4e. Edificios (Building3D)
+        4f. Tren (TrainDecor)
+        4g. Decoración (Decor3D, CityDecor)
+  5.  Frontend: sistema i18n (internacionalización)
+  6.  Frontend: paneles UI
+  7.  Frontend: servicios y datos (dataService)
+  8.  Backend: ASP.NET Core 8
+        8a. Controllers
+        8b. Servicios y modelos
+        8c. Localización RESX
+  9.  Seguridad
+  10. Cómo añadir un nuevo edificio
+  11. Cómo añadir un nuevo idioma
+  12. Cómo añadir un nuevo panel/modal
+  13. Mobile
+  14. Despliegue
+  15. Decisiones de diseño y porqués
+
+================================================================================
+1. VISIÓN GENERAL
+================================================================================
+
+Este proyecto es un portfolio personal presentado como un videojuego isométrico
+3D. El visitante controla un personaje que camina por una ciudad generada
+proceduralmente. Cada edificio representa una sección del portfolio (Sobre mí,
+CV, Proyectos, Contacto). Entrar en un edificio abre un panel modal con el
+contenido real.
+
+Stack principal:
+  - Frontend : Vite 5 + TypeScript + Three.js
+  - Backend  : .NET 8 / ASP.NET Core 8 (API REST)
+  - Email    : SendGrid (formulario de contacto)
+  - i18n     : ES / EN / CA (frontend estático + RESX en backend)
+
+================================================================================
+2. ESTRUCTURA DE DIRECTORIOS
+================================================================================
+
+PersonalWebADRIA/
+├── PersonalWebAPI/              API REST ASP.NET Core
+│   ├── Controllers/             Endpoints HTTP
+│   └── Properties/
+│       └── launchSettings.json  Puertos de desarrollo (5166 http, 7210 https)
+│
+├── PersonalWebCore/             Lógica de negocio
+│   ├── Attributes/              [Localizable] attribute
+│   ├── Helpers/                 TextHelpers (acceso RESX dinámico)
+│   ├── Interfaces/              IProfileService, IProjectService, IEmailService…
+│   ├── Models/                  Profile, Project, Skill, Experience, Education…
+│   ├── Resources/               Archivos .resx (ProfileResources.es.resx, etc.)
+│   └── Services/                ProfileService, ProjectService, EmailService
+│
+├── PersonalWebInfrastructure/   Servicios externos
+│   └── ExternalServices/        GitHubApiClient, SendGridEmailClient
+│
+├── frontend/
+│   ├── public/
+│   │   ├── _headers             Cabeceras HTTP para producción (Netlify)
+│   │   ├── assets/
+│   │   │   ├── trains/          Modelos GLB del tren (Kenney Train Kit)
+│   │   │   └── buildings/       Modelos GLB de edificios
+│   │   └── data/                JSON de respaldo (perfil, proyectos, experiencia)
+│   └── src/
+│       ├── game/
+│       │   ├── constants3D.ts   MAP_COLS, MAP_ROWS, STREET_COLS, TileType…
+│       │   ├── GameEngine.ts    Renderer, cámara, luces, bucle de render
+│       │   ├── GameLoop.ts      Input, lógica del juego, cámara follow
+│       │   └── world/
+│       │       ├── AssetLoader.ts    Precarga de modelos GLB
+│       │       ├── Building3D.ts     Modelo 3D + etiqueta de edificio
+│       │       ├── CityDecor.ts      Skyline y edificios decorativos
+│       │       ├── Decor3D.ts        Árboles, farolas, bloques de hierba
+│       │       ├── Player3D.ts       Personaje jugable (mesh procesal)
+│       │       ├── TileGrid3D.ts     Generación del mapa de tiles
+│       │       └── TrainDecor.ts     Tren animado dando la vuelta a la ciudad
+│       ├── i18n/
+│       │   └── index.ts         Tabla de traducciones + getLocale/setLocale/t()
+│       ├── services/
+│       │   ├── dataService.ts   Llamadas a API (con fallback a JSON estático)
+│       │   └── githubService.ts Repositorios de GitHub
+│       ├── types/
+│       │   └── index.ts         Interfaces TypeScript (Profile, Project, etc.)
+│       ├── ui/
+│       │   ├── UIManager.ts     Controlador de paneles modales
+│       │   └── panels/
+│       │       ├── AboutPanel.ts
+│       │       ├── ContactPanel.ts
+│       │       ├── CVPanel.ts
+│       │       ├── GitHubPanel.ts
+│       │       ├── LanguagePanel.ts
+│       │       └── ProjectsPanel.ts
+│       ├── utils/
+│       │   └── htmlUtils.ts     escapeHtml(), safeUrl()
+│       ├── main.ts              Punto de entrada (applyToDOM + GameEngine + GameLoop)
+│       └── style.css            Todos los estilos CSS
+│
+├── vite.config.ts               Build config + proxy /api/ → backend
+├── start-dev.ps1                Script PowerShell para iniciar todo en dev
+└── DEVGUIDE.txt                 Este archivo
+
+================================================================================
+3. CÓMO INICIAR EL ENTORNO DE DESARROLLO
+================================================================================
+
+Prerequisitos:
+  - Node.js LTS (≥18)   →  winget install OpenJS.NodeJS.LTS
+  - .NET 8 SDK          →  winget install Microsoft.DotNet.SDK.8
+  - (Opcional) Visual Studio 2022 para el backend
+
+Opción A — Script automático (recomendado):
+  Desde la raíz del proyecto, en PowerShell:
+    .\start-dev.ps1
+
+  Esto abre dos ventanas: una para el API (.NET) y otra para el frontend (Vite).
+
+Opción B — Manual:
+  Terminal 1 (API):
+    cd PersonalWebAPI
+    dotnet run
+    → escucha en http://localhost:5166
+
+  Terminal 2 (frontend):
+    cd frontend
+    npm install          # solo la primera vez
+    npm run dev
+    → abre http://localhost:5173
+
+Si usas IIS Express desde Visual Studio, el API escucha en http://localhost:27506.
+En ese caso cambia API_TARGET en vite.config.ts o lanza:
+    $env:API_URL="http://localhost:27506"; npm run dev
+
+El proxy de Vite redirige todas las peticiones /api/* al backend.
+HTTPS está desactivado en Development (Program.cs lo omite) para evitar
+problemas de certificados autofirmados con el proxy.
+
+================================================================================
+4. FRONTEND: MOTOR 3D
+================================================================================
+
+4a. GameEngine (src/game/GameEngine.ts)
+---------------------------------------
+Envuelve Three.js. Crea la escena, la cámara perspectiva (FOV 58°), el renderer
+WebGL y las luces. Expone onUpdate(callback) para que GameLoop se suscriba al
+bucle de render.
+
+Luces:
+  - HemisphereLight   : luz de cielo cálida + rebote verde del suelo
+  - DirectionalLight  : sol desde suroeste, genera sombras (1024×1024)
+  - DirectionalLight  : relleno frío desde noreste (sin sombras)
+
+Ajustes de rendimiento:
+  - shadowMap 1024×1024 (no 2048, equilibrio calidad/perf)
+  - pixelRatio cap 1.5 (evita sobrerender en pantallas Retina)
+  - ToneMapping ACES filmic
+
+4b. GameLoop (src/game/GameLoop.ts)
+------------------------------------
+Es el "director de escena". Crea todos los objetos del mundo, gestiona el input
+del teclado (y los botones táctiles en móvil), mueve al jugador y actualiza la
+cámara (follow cam con suavizado dt*10).
+
+Edificios: definidos en el array BUILDINGS como {type, col, row, kind?, url?}.
+  kind: 'modal' (por defecto) | 'link' | 'wip'
+  Los edificios NO bloquean el movimiento (blocked = Set vacío). Las calles
+  siempre son transitables; la interacción es por proximidad.
+
+Proximidad: distancia Chebyshev < 2 tiles del edificio más cercano.
+
+Tecla E:
+  - modal → abre panel en UIManager
+  - link  → window.open(url, '_blank', 'noopener,noreferrer')
+  - wip   → muestra toast "próximamente"
+
+Burbuja de bienvenida: visible al cargar, se oculta al primer movimiento o al
+pulsar E.
+
+Efecto de colisión: cuando moveDir() devuelve false, se activa el flash de
+vignette rojo (#collision-flash). Se evita repetir el flash mientras se mantiene
+la misma dirección.
+
+Input móvil: los botones del D-pad (data-key="KeyW/A/S/D/E") dispatchen
+KeyboardEvent sintéticos al document, que el handler de keydown/keyup recoge
+igual que el teclado físico.
+
+4c. Sistema de tiles (src/game/constants3D.ts + TileGrid3D.ts)
+---------------------------------------------------------------
+El mundo es una cuadrícula de MAP_COLS×MAP_ROWS (28×16) tiles de 1u×1u.
+
+TileType enum:
+  Grass (0) — hierba, NO caminable
+  Path  (1) — asfalto, caminable
+  Cross (4) — intersección, caminable
+  Water (2) — reservado
+  Sand  (3) — reservado
+  Void  (5) — reservado
+
+STREET_COLS = [3, 7, 11, 15, 19, 23]  → columnas de calle verticales
+STREET_ROWS = [3, 7, 11]               → filas de calle horizontales
+
+buildTileMap() genera la cuadrícula: Path en calles, Cross en intersecciones,
+Grass en todo lo demás. renderTileMap() crea los meshes Three.js.
+
+Conversión coordenadas:
+  gridToWorld(col, row) = { x: col - (MAP_COLS-1)/2, z: row - (MAP_ROWS-1)/2 }
+  El centro del mapa es (0,0) en mundo 3D.
+
+Colisión: Player3D.moveTo() rechaza el movimiento si el tile destino no es
+Path ni Cross. Los árboles y edificios decorativos están en tiles Grass, por lo
+que actúan como obstáculos naturales.
+
+4d. Player3D (src/game/world/Player3D.ts)
+------------------------------------------
+Personaje procesal (sin GLB): cilindro cuerpo + esfera cabeza + sombrero.
+Movimiento discreto por tiles con interpolación suave (MOVE_SPEED=8 u/s).
+Animación de salto: Math.abs(Math.sin(time*22)) * 0.07 en Y.
+Rota automáticamente en la dirección de movimiento (atan2 dx,dz).
+
+4e. Edificios (src/game/world/Building3D.ts)
+---------------------------------------------
+Cada edificio carga su modelo GLB (AssetLoader.ts precarga todos).
+El modelo se normaliza a un footprint de ~1.6u y se eleva para sentarse en el
+suelo. Encima lleva un Sprite con la etiqueta traducida.
+
+Colores de etiqueta según kind:
+  modal → blanco sobre oscuro
+  link  → cian sobre azul (con ↗)
+  wip   → amarillo sobre marrón (con 🚧)
+
+Para añadir un modelo de edificio nuevo, ver sección 10.
+
+4f. Tren (src/game/world/TrainDecor.ts)
+----------------------------------------
+El tren da la vuelta completa al perímetro de la ciudad siguiendo 4 waypoints:
+  NW(-14.5, -8.5) → NE(14.5, -8.5) → SE(14.5, 8.5) → SW(-14.5, 8.5) → NW
+
+Sistema de path-following:
+  - segDist acumula la distancia recorrida dentro del segmento actual
+  - Al superar la longitud del segmento, avanza al siguiente waypoint
+  - Rotación: Math.atan2(-dx, -dz) para modelos Kenney que enfrentan -Z
+
+Vías procedurales en los 4 lados:
+  addTrackX(scene, z, xMin, xMax) → vía horizontal
+  addTrackZ(scene, x, zMin, zMax) → vía vertical
+
+Los vagones están en z=+1.1 y z=+2.2 local (detrás del morro -Z).
+Velocidad: 5 u/s (vuelta completa ≈18 segundos).
+
+Para cambiar la velocidad: modifica SPEED en TrainDecor.ts.
+Para añadir más vagones: añade más .position.z y pushea al grupo.
+
+4g. Decoración (Decor3D.ts, CityDecor.ts)
+------------------------------------------
+Decor3D: árboles, farolas, bloques de hierba en bloques interiores de la ciudad.
+CityDecor: edificios del skyline en los bordes norte/sur/este/oeste (decorativos,
+no interactivos). Generados proceduralmente con BoxGeometry.
+
+================================================================================
+5. FRONTEND: SISTEMA I18N
+================================================================================
+
+Archivo: src/i18n/index.ts
+
+El sistema es minimalista y deliberadamente simple:
+  - Una tabla JS estática: UI[locale][key] = string
+  - Persiste el idioma en localStorage ('locale')
+  - Al cambiar idioma: setLocale() guarda y recarga la página (location.reload())
+    La recarga es necesaria porque Three.js crea los textos de etiquetas una sola
+    vez al inicializar la escena; no existe re-render reactivo.
+
+API pública:
+  t(key: string): string        → obtiene la traducción para el locale activo
+  getLocale(): Locale           → devuelve 'es' | 'en' | 'ca'
+  setLocale(locale: Locale)     → guarda + recarga
+  applyToDOM()                  → aplica [data-i18n="key"] a todos los elementos
+
+Claves disponibles (ver archivo para lista completa):
+  loading, hint.*, toast.*, controls.*, building.*, panel.*, lang.*,
+  projects.disclaimer.*, about.webstack.title, about.skills,
+  cv.experience, cv.education, welcome.line1, welcome.line2
+
+Para añadir una clave: editar los tres bloques (es/en/ca) en UI{}.
+Para añadir un idioma: ver sección 11.
+
+El contenido de los paneles (perfil, CV, proyectos) se localiza a través del
+backend: el dataService envía Accept-Language con el locale activo, y el API
+devuelve los textos del archivo RESX correspondiente.
+
+================================================================================
+6. FRONTEND: PANELES UI
+================================================================================
+
+UIManager (src/ui/UIManager.ts):
+  - Gestiona el ciclo de vida de paneles modales (open/close/isOpen)
+  - Renderiza cada panel asincrónicamente en #ui-overlay
+  - El título del panel usa t('panel.<type>')
+  - Casos especiales: 'languages' → renderLanguagePanel() + attachLanguageHandler()
+                      'contact'   → renderContact()     + attachContactFormHandler()
+
+Cada panel devuelve HTML (string) como Promise<string> o string.
+IMPORTANTE: Todo contenido dinámico (API/JSON) DEBE pasar por escapeHtml().
+Los URLs en atributos href DEBEN usar safeUrl() (previene javascript: injection).
+
+Paneles existentes:
+  AboutPanel    → getProfile() del API, habilidades + stack de la web
+  CVPanel       → getExperienceData() del API, timeline experiencia + educación
+  ProjectsPanel → getProjects() del API, cards con links a GitHub
+  ContactPanel  → formulario Netlify Forms (sin llamada al API)
+  GitHubPanel   → githubService (API pública de GitHub)
+  LanguagePanel → botones para cambiar idioma (sin datos externos)
+
+================================================================================
+7. FRONTEND: SERVICIOS Y DATOS
+================================================================================
+
+dataService.ts (src/services/dataService.ts):
+  Llama al API con Accept-Language: <locale> para datos localizados.
+  Si el API no responde (503/network error), cae a los JSON estáticos de
+  /public/data/ que siempre están en español.
+
+  getProfile()       → GET /api/profile  (perfil + skills + experiencia + educación)
+  getProjects()      → GET /api/projects
+  getExperienceData()→ extrae experiencia del resultado de getProfile()
+
+  Los datos se cachean en variables de módulo. Al cambiar de idioma la página
+  se recarga (setLocale), borrando la caché automáticamente.
+
+  Mapeo de tipos: la API devuelve SocialLinks como string[], el frontend
+  espera { github, linkedin }. El mapper busca la URL con includes('github').
+
+/public/data/ (JSON de respaldo):
+  profile.json    → perfil completo (formato frontend, Spanish only)
+  projects.json   → proyectos
+  experience.json → { experience: [...], education: [...] }
+
+  Estos archivos se usan solo si el API no está disponible (e.g. deploy
+  estático sin backend). Mantenerlos actualizados con el ProfileService.cs.
+
+================================================================================
+8. BACKEND: ASP.NET CORE 8
+================================================================================
+
+8a. Controllers (PersonalWebAPI/Controllers/)
+----------------------------------------------
+  GET  /api/profile         → perfil completo localizado
+  GET  /api/profile/skills  → solo habilidades
+  GET  /api/projects        → todos los proyectos
+  GET  /api/projects/{id}   → proyecto por ID
+  GET  /api/projects/featured
+  POST /api/contact         → envía email via SendGrid
+  GET  /api/github/repos    → repositorios públicos de GitHub
+
+8b. Servicios y modelos
+------------------------
+PersonalWebCore/Services/ProfileService.cs:
+  Construye el objeto Profile usando TextHelpers.TextoTraducible() para cada
+  campo localizable. Los textos vienen del RESX según la cultura activa
+  (establecida por AcceptLanguageHeaderRequestCultureProvider).
+
+PersonalWebCore/Services/ProjectService.cs:
+  Los proyectos están hardcodeados en inglés (sin localización por RESX).
+  Para localizarlos, añadir TextHelpers.TextoTraducible() y los RESX
+  correspondientes (ProjectsResources.es.resx, .en.resx, .ca.resx).
+
+8c. Localización RESX
+----------------------
+Los archivos .resx están en PersonalWebCore/Resources/:
+  ProfileResources.es.resx  / .en.resx / .ca.resx
+  SkillsResources.es.resx   / .en.resx / .ca.resx
+  ExperienceResources.es.resx / .en.resx / .ca.resx
+  EducationResources.es.resx  / .en.resx / .ca.resx
+
+Cada archivo tiene clave=valor. Ejemplo ProfileResources.en.resx:
+  <data name="Profile_Title"><value>Software Developer</value></data>
+
+TextHelpers.TextoTraducible("Profile_Title", "fallback", "Profile") lee el RESX
+de la cultura activa en el request (Accept-Language header → RequestLocalization).
+
+Para añadir un nuevo texto localizable:
+  1. Añadir la clave en los 3 archivos RESX (es/en/ca)
+  2. Usar TextHelpers.TextoTraducible("NuevaClave", "fallback", "Recurso")
+     en el service correspondiente
+
+================================================================================
+9. SEGURIDAD
+================================================================================
+
+XSS (Cross-Site Scripting):
+  - Toda salida dinámica en paneles HTML pasa por escapeHtml() (htmlUtils.ts)
+  - URLs en href pasan por safeUrl() que valida protocolo http/https
+  - Nunca usar innerHTML con datos de usuario sin sanitizar
+
+CORS (backend):
+  - Solo orígenes explícitos (localhost:3000, localhost:5173, netlify, vercel)
+  - Métodos: GET y POST únicamente
+  - AllowCredentials() NO se usa (no hay autenticación por cookies)
+
+Cabeceras HTTP:
+  Backend (Program.cs middleware):
+    X-Content-Type-Options: nosniff
+    X-Frame-Options: SAMEORIGIN
+    X-XSS-Protection: 1; mode=block
+    Referrer-Policy: strict-origin-when-cross-origin
+    Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+  Frontend dev (vite.config.ts):
+    Content-Security-Policy: script-src 'self'; style-src 'self' 'unsafe-inline';
+    connect-src 'self' https://api.github.com; frame-ancestors 'none'
+
+  Frontend producción (public/_headers para Netlify):
+    Misma CSP + X-Frame-Options DENY
+
+HTTPS:
+  - En Development: HTTPS redirect desactivado (permite proxy de Vite HTTP)
+  - En Production:  app.UseHttpsRedirection() activo
+
+Formulario de contacto:
+  - Netlify Forms (no va al API .NET)
+  - Honeypot bot-field para spam básico
+  - maxlength en todos los campos (100 chars nombre, 254 email, 2000 mensaje)
+  - SIN rate limiting del lado cliente — Netlify aplica el suyo propio
+
+Puntos pendientes de mejora:
+  - Añadir rate limiting al endpoint /api/contact (AspNetCoreRateLimit nuget)
+  - Considerar nonce-based CSP para eliminar 'unsafe-inline' en estilos
+  - Rotar la API key de SendGrid periódicamente
+
+Variables de entorno sensibles:
+  - SendGrid API key → debe estar en User Secrets o en variable de entorno
+    SENDGRID_API_KEY, NUNCA hardcodeada en código
+  - Para añadirla: dotnet user-secrets set "SendGrid:ApiKey" "SG.xxx"
+
+================================================================================
+10. CÓMO AÑADIR UN NUEVO EDIFICIO
+================================================================================
+
+Paso 1: Decidir el tipo de edificio
+  - modal  → abre un panel (necesita panel HTML)
+  - link   → abre URL externa
+  - wip    → muestra toast "próximamente"
+
+Paso 2: Añadir el tipo en src/types/index.ts
+  export type BuildingType = '...' | 'mi-edificio';
+  Si es modal, añadirlo también a ModalBuildingType.
+
+Paso 3: Añadir el modelo GLB (si existe)
+  Copiar el .glb a frontend/public/assets/buildings/mi-edificio.glb
+  Registrar en AssetLoader.ts en BUILDING_FILE:
+    'mi-edificio': 'mi-edificio.glb'
+
+Paso 4: Añadir traducciones en src/i18n/index.ts
+  En los tres idiomas:
+    'building.mi-edificio': 'Nombre del edificio'
+  Añadir en Building3D.ts en LABEL_KEY:
+    'mi-edificio': 'building.mi-edificio'
+
+Paso 5: Colocar en el mapa en src/game/GameLoop.ts
+  { type: 'mi-edificio', col: X, row: Y, kind: 'modal' | 'link' | 'wip', url?: '...' }
+
+  Posiciones de calles válidas: col ∈ {3,7,11,15,19,23}, row ∈ {3,7,11}
+  Los edificios se colocan en intersecciones o a lo largo de las calles.
+
+Paso 6 (solo para modal): Crear el panel
+  Crear src/ui/panels/MiEdificioPanel.ts que exporte renderMiEdificio(): string
+  Añadir el caso en UIManager.ts en el switch del método open().
+  Añadir la clave 'panel.mi-edificio' en i18n y en TITLE_KEY de UIManager.
+
+================================================================================
+11. CÓMO AÑADIR UN NUEVO IDIOMA
+================================================================================
+
+Paso 1: Frontend — src/i18n/index.ts
+  Añadir el nuevo código a Locale:
+    export type Locale = 'es' | 'en' | 'ca' | 'fr';
+  Añadir un bloque completo 'fr': { ... } en el objeto UI con todas las claves.
+  Añadir el botón en LanguagePanel.ts: { code: 'fr', flag: '🇫🇷' }
+  Añadir la clave 'lang.fr': 'Français' en los tres bloques existentes.
+
+Paso 2: Backend — PersonalWebCore/Resources/
+  Copiar los archivos .es.resx y renombrarlos a .fr.resx:
+    ProfileResources.fr.resx, SkillsResources.fr.resx, etc.
+  Traducir todos los valores al francés.
+
+Paso 3: Backend — Program.cs
+  Añadir new CultureInfo("fr") a supportedCultures.
+
+================================================================================
+12. CÓMO AÑADIR UN NUEVO PANEL/MODAL
+================================================================================
+
+1. Crear src/ui/panels/MiPanel.ts:
+   export async function renderMiPanel(): Promise<string> {
+     // Llamar a dataService si necesitas datos del API
+     // Usar escapeHtml() para todo contenido dinámico
+     // Usar safeUrl() para URLs en href
+     return `<h3 class="panel-title">${t('panel.mipanel')}</h3> ...`;
+   }
+   // Si el panel tiene formularios/listeners:
+   export function attachMiPanelHandler(): void { ... }
+
+2. En UIManager.ts:
+   - Importar renderMiPanel (y attachMiPanelHandler si aplica)
+   - Añadir 'mipanel' a ModalBuildingType en types/index.ts
+   - Añadir case 'mipanel' en el switch de open()
+   - Añadir 'panel.mipanel': '...' en TITLE_KEY y en i18n
+
+3. Añadir el edificio que abre el panel (sección 10).
+
+================================================================================
+13. MOBILE
+================================================================================
+
+El D-pad virtual (#mobile-controls) se muestra con @media (pointer: coarse).
+Esto detecta dispositivos táctiles (smartphones, tablets) independientemente
+del tamaño de pantalla — un iPad con ratón físico NO lo mostraría.
+
+Los botones disparan KeyboardEvent sintéticos al document, que recogen los
+mismos handlers keydown/keyup que el teclado físico. Esto mantiene una sola
+fuente de verdad para el input.
+
+Orientación: el juego funciona mejor en landscape. Considera añadir un aviso
+en portrait mode si el viewport es muy pequeño.
+
+Gesture alternativo: swipe (touchmove) podría implementarse en GameLoop.ts
+como alternativa al D-pad. La lógica sería: calcular dx/dy del swipe y llamar
+a player.moveDir() con el vector resultante.
+
+La burbuja de bienvenida menciona "W A S D" pero en móvil el usuario ve el
+D-pad. Si quieres texto diferente en móvil, usar window.matchMedia en main.ts
+para cambiar las claves de i18n antes de applyToDOM().
+
+================================================================================
+14. DESPLIEGUE
+================================================================================
+
+Frontend (Netlify recomendado):
+  Build command: npm run build
+  Publish dir  : frontend/dist
+  El archivo frontend/public/_headers se copia automáticamente a dist/_headers
+  y aplica las cabeceras de seguridad en producción.
+
+  NOTA: El proxy de Vite solo existe en desarrollo. En producción el frontend
+  llama al API con la URL completa. Para configurarlo:
+    1. Añadir VITE_API_URL como variable de entorno en Netlify
+    2. En dataService.ts, reemplazar '/api/profile' por
+       `${import.meta.env.VITE_API_URL}/api/profile`
+    O bien configurar un Netlify Redirect: /api/* → https://tu-api.com/api/:splat 200
+
+Backend (.NET):
+  Opciones: Azure App Service, Railway, Render, VPS propio.
+  - Publicar con: dotnet publish -c Release
+  - Asegurarse de que ASPNETCORE_ENVIRONMENT=Production (activa HTTPS redirect)
+  - Configurar SENDGRID_API_KEY como variable de entorno del servidor
+  - Añadir el dominio del frontend a WithOrigins() en Program.cs
+
+================================================================================
+15. DECISIONES DE DISEÑO Y PORQUÉS
+================================================================================
+
+¿Por qué Three.js en lugar de un framework 2D?
+  Diferenciación visual. Un portfolio en 3D isométrico es memorable y único.
+  Three.js permite control total sin overhead de un motor completo (Unity/Unreal).
+
+¿Por qué tiles discretos en lugar de movimiento libre?
+  Simplicidad de colisiones (chequeo O(1) sobre la cuadrícula), coherencia visual
+  con la estética pixel-art/retro, y facilita la colocación de edificios en
+  posiciones conocidas.
+
+¿Por qué location.reload() al cambiar idioma?
+  Las etiquetas de edificios en Three.js se crean como Sprites en la
+  inicialización de la escena. No existe un sistema reactivo. La recarga es
+  el enfoque más simple y robusto: O(0) código extra vs. O(n) lógica de update.
+
+¿Por qué el backend tiene los datos y no solo JSON estáticos?
+  El backend RESX permite traducciones mantenibles sin duplicar JSON por idioma.
+  Centraliza la "fuente de verdad" y permite añadir lógica de negocio futura.
+
+¿Por qué blocked = Set vacío (edificios no bloquean)?
+  Las calles son el espacio de movimiento. Los edificios se colocan fuera de las
+  calles (en tiles Grass). El jugador nunca necesita "cruzar" un edificio, por lo
+  que no bloquear simplifica el código y evita bugs de navegación.
+
+¿Por qué Vite proxy en lugar de llamadas cross-origin directas?
+  Evita problemas de CSP (connect-src 'self' cubre todo), evita CORS preflight
+  en cada llamada, y funciona igual en dev y producción (si se configura un
+  redirect en el hosting).
+
+¿Por qué safeUrl() y no solo escapeHtml()?
+  escapeHtml() previene inyección de HTML, pero no previene href="javascript:alert(1)".
+  safeUrl() valida que el protocolo sea http o https antes de usarlo en href.
+
+================================================================================
+FIN DEL DOCUMENTO
+================================================================================
