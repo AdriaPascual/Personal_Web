@@ -79,6 +79,16 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
     options.KnownProxies.Clear();
 });
 
+// Identifica al visitante para el rate limiting. Render sirve detrás de Cloudflare,
+// que añade su propio salto de proxy antes del de Render — con dos saltos,
+// X-Forwarded-For/ForwardedHeaders no resuelve la IP real de forma fiable (se
+// comprobó en producción: el límite se saltaba de forma intermitente). Cloudflare
+// sí garantiza CF-Connecting-IP como la IP real del visitante en todos los casos.
+static string GetClientKey(HttpContext context) =>
+    context.Request.Headers["CF-Connecting-IP"].FirstOrDefault()
+    ?? context.Connection.RemoteIpAddress?.ToString()
+    ?? "unknown";
+
 // Rate limiting: límite global suave + límite estricto para /api/contact
 // (endpoint alcanzable directamente sin pasar por el frontend/CORS, ya que
 // CORS solo lo aplican los navegadores, no protege frente a llamadas directas).
@@ -88,7 +98,7 @@ builder.Services.AddRateLimiter(options =>
 
     options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
         RateLimitPartition.GetFixedWindowLimiter(
-            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            partitionKey: GetClientKey(context),
             factory: _ => new FixedWindowRateLimiterOptions
             {
                 PermitLimit = 60,
@@ -97,7 +107,7 @@ builder.Services.AddRateLimiter(options =>
 
     options.AddPolicy("contact", context =>
         RateLimitPartition.GetFixedWindowLimiter(
-            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            partitionKey: GetClientKey(context),
             factory: _ => new FixedWindowRateLimiterOptions
             {
                 PermitLimit = 5,
