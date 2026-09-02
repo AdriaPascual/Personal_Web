@@ -2,11 +2,10 @@
   command   = "npm run build"
   publish   = "dist"
 
-# Proxy same-origin: el navegador nunca llama a Azure directamente (evita problemas de CORS).
-# TODO: sustituir __AZURE_API_URL__ por la URL real del App Service una vez creado.
+# Proxy same-origin: el navegador nunca llama a Render directamente (evita problemas de CORS).
 [[redirects]]
   from   = "/api/*"
-  to     = "__AZURE_API_URL__/api/:splat"
+  to     = "https://personalweb-api-794o.onrender.com/api/:splat"
   status = 200
   force  = true
 
