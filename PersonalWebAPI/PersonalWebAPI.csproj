@@ -5,6 +5,10 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>60e194d0-a69c-4541-99b1-56f8d1509d2e</UserSecretsId>
+    <!-- Server GC reserva un heap por núcleo detectado; en contenedores de 512MB (ej. Render free)
+         eso agota la memoria en el arranque y provoca un crash nativo (SIGSEGV). -->
+    <ServerGarbageCollection>false</ServerGarbageCollection>
+    <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
   </PropertyGroup>
 
   <ItemGroup>
