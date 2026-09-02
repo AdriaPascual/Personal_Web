@@ -12,9 +12,24 @@
     <meta property="og:description" content="Portfolio personal en forma de videojuego 3D isométrico. Desarrollador .NET Core, C# y Python." />
     <meta property="og:url" content="https://adriapascualcuesta.com/" />
     <meta name="twitter:card" content="summary" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="stylesheet" href="/src/style.css" />
   </head>
   <body>
+    <!--
+      Copia oculta del formulario de contacto SOLO para que el bot de Netlify
+      lo detecte en el build (Netlify Forms lee el HTML estático generado, no
+      el DOM en tiempo de ejecución). El formulario real y visible lo genera
+      ContactPanel.ts con los mismos campos; ambos comparten name="contact".
+    -->
+    <form name="contact" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="contact" />
+      <input name="bot-field" />
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <textarea name="message"></textarea>
+    </form>
+
     <div id="loading" data-i18n="loading">Cargando mundo&#8230;</div>
     <div id="game-container"></div>
     <div id="ui-overlay" aria-live="polite"></div>
