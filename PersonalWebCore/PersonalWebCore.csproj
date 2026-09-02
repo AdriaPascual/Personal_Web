@@ -34,8 +34,9 @@
     </EmbeddedResource>
   </ItemGroup>
 
-	<!-- Solo ejecutar en configuración Release -->
-	<Target Name="GenerateTranslations" BeforeTargets="PreBuildEvent" Condition="'$(Configuration)' == 'Release'">
+	<!-- Solo ejecutar en configuración Release, y solo si se compila a través del .sln
+	     (SolutionDir no está definido al compilar el .csproj suelto, como hace Docker/Render) -->
+	<Target Name="GenerateTranslations" BeforeTargets="PreBuildEvent" Condition="'$(Configuration)' == 'Release' AND '$(SolutionDir)' != '' AND '$(SolutionDir)' != '*Undefined*'">
 		<PropertyGroup>
 			<BuildToolsPath>$(SolutionDir)BuildTools\BuildTools.csproj</BuildToolsPath>
 			<CorePath>$(ProjectDir)</CorePath>

@@ -1,0 +1,9 @@
+frontend/
+BuildTools/
+**/bin/
+**/obj/
+**/.vs/
+.git/
+.github/
+*.md
+*.txt
