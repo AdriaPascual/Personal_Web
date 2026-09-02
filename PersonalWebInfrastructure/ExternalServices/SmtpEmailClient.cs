@@ -46,11 +46,16 @@ public class SmtpEmailClient : IEmailService
             mime.Subject = $"Portfolio — nuevo mensaje: {message.Subject}";
             mime.Body    = new TextPart("html") { Text = BuildHtml(message) };
 
+            // Algunos hostings (ej. Render free tier) bloquean o no completan conexiones
+            // SMTP salientes; sin este timeout, ConnectAsync puede colgarse minutos en vez
+            // de fallar rápido.
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+
             using var client = new SmtpClient();
-            await client.ConnectAsync(_host, _port, SecureSocketOptions.StartTls);
-            await client.AuthenticateAsync(_user, _password);
-            await client.SendAsync(mime);
-            await client.DisconnectAsync(quit: true);
+            await client.ConnectAsync(_host, _port, SecureSocketOptions.StartTls, cts.Token);
+            await client.AuthenticateAsync(_user, _password, cts.Token);
+            await client.SendAsync(mime, cts.Token);
+            await client.DisconnectAsync(quit: true, cts.Token);
 
             _logger.LogInformation("Email enviado desde {Sender}", message.Email);
             return true;
