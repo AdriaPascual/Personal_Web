@@ -115,17 +115,22 @@ builder.Services.AddRateLimiter(options =>
             }));
 });
 
-// Swagger/OpenAPI
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
+// Swagger/OpenAPI - solo se registra en Development; en producción no se expone
+// (ver más abajo) y no tiene sentido reservar la memoria que usa Swashbuckle
+// en un contenedor de 512MB.
+if (builder.Environment.IsDevelopment())
 {
-    c.SwaggerDoc("v1", new()
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen(c =>
     {
-        Title = "Personal Portfolio API",
-        Version = "v1",
-        Description = "API REST para portfolio personal con soporte multiidioma"
+        c.SwaggerDoc("v1", new()
+        {
+            Title = "Personal Portfolio API",
+            Version = "v1",
+            Description = "API REST para portfolio personal con soporte multiidioma"
+        });
     });
-});
+}
 
 var app = builder.Build();
 

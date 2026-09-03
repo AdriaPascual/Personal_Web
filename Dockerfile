@@ -27,4 +27,13 @@ EXPOSE 8080
 # y dejarlo en un bucle de arranque fallido permanente hasta recrearlo.
 ENV hostBuilder__reloadConfigOnChange=false
 
+# El plan free de Render da 512MB. Con Workstation GC (ver PersonalWebAPI.csproj)
+# ya se redujo mucho el consumo, pero se ha visto crashear igualmente (SIGSEGV,
+# "Exited with status 139") bajo presión puntual — probablemente porque el GC
+# deja crecer el heap hasta cerca del límite real del contenedor antes de
+# actuar. Forzamos un límite duro conservador (256MB) para que el GC recolecte
+# mucho antes de acercarse al techo real, dejando margen para el resto del
+# proceso (runtime, stacks nativos, etc.).
+ENV DOTNET_GCHeapHardLimit=10000000
+
 ENTRYPOINT ["dotnet", "PersonalWebAPI.dll"]
