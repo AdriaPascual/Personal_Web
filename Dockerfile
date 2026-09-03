@@ -20,4 +20,11 @@ COPY --from=build /app .
 ENV ASPNETCORE_HTTP_PORTS=8080
 EXPOSE 8080
 
+# Desactiva el FileSystemWatcher que ASP.NET Core crea por defecto sobre
+# appsettings.json (recarga en caliente). Usa inotify, y un contenedor que se
+# redespliega en cada cambio no lo necesita; además un ciclo de crashes puede
+# agotar el límite de instancias de inotify del contenedor (128 por defecto)
+# y dejarlo en un bucle de arranque fallido permanente hasta recrearlo.
+ENV hostBuilder__reloadConfigOnChange=false
+
 ENTRYPOINT ["dotnet", "PersonalWebAPI.dll"]
