@@ -5,7 +5,18 @@ export function renderLanguagePanel(): string {
   const langs: { code: Locale; flag: string }[] = [
     { code: 'es', flag: '🇪🇸' },
     { code: 'en', flag: '🇬🇧' },
-    { code: 'ca', flag: '\u{1F3F4}\u{E0065}\u{E0073}\u{E0063}\u{E0074}\u{E007F}' }, // Catalan Senyera
+    // Unicode no tiene un emoji de bandera para Cataluña (el mecanismo de "tag
+    // sequences" solo reconoce Inglaterra/Escocia/Gales); se dibuja como SVG.
+    {
+      code: 'ca',
+      flag: `<svg viewBox="0 0 27 18" width="20" height="14" style="vertical-align:middle;border-radius:2px;" aria-hidden="true">
+        <rect width="27" height="18" fill="#FCDD09"/>
+        <rect y="2" width="27" height="2" fill="#DA121A"/>
+        <rect y="6" width="27" height="2" fill="#DA121A"/>
+        <rect y="10" width="27" height="2" fill="#DA121A"/>
+        <rect y="14" width="27" height="2" fill="#DA121A"/>
+      </svg>`,
+    },
   ];
 
   const buttons = langs.map(l => `

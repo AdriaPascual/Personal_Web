@@ -10,13 +10,22 @@ function langHeaders(): HeadersInit {
   return { 'Accept-Language': getLocale() };
 }
 
-// Tries the API; returns the Response on success, null on any failure
+// Render's free tier sleeps after inactivity and can take 30-50s to wake up.
+// Without a timeout, a cold backend would leave the panel stuck on "loading"
+// instead of falling back to the static JSON almost instantly.
+const API_TIMEOUT_MS = 3500;
+
+// Tries the API; returns the Response on success, null on any failure (including timeout)
 async function apiFetch(path: string): Promise<Response | null> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
   try {
-    const r = await fetch(path, { headers: langHeaders() });
+    const r = await fetch(path, { headers: langHeaders(), signal: controller.signal });
     return r.ok ? r : null;
   } catch {
     return null;
+  } finally {
+    clearTimeout(timer);
   }
 }
 
