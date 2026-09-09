@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "name": "Fast Food Dataset Analysis",
+    "description": "Comprehensive data analysis and visualization with Python and Jupyter Notebook on the Fast Food dataset from Kaggle.",
+    "technologies": ["Python", "Pandas", "Matplotlib", "Seaborn", "Jupyter Notebook"],
+    "githubUrl": "https://github.com/AdriaPascual/Analysis-of-the-Fast-Food-Dataset-from-Kaggle",
+    "liveUrl": "",
+    "createdDate": "2023-04-11",
+    "isFeatured": true
+  },
+  {
+    "id": 2,
+    "name": "Data Visualization Examples",
+    "description": "Collection of Python notebooks featuring various data visualization techniques using Matplotlib, Seaborn, and Plotly.",
+    "technologies": ["Python", "Matplotlib", "Seaborn", "Plotly", "Jupyter Notebook"],
+    "githubUrl": "https://github.com/AdriaPascual/data-visualization-examples",
+    "liveUrl": "",
+    "createdDate": "2023-03-20",
+    "isFeatured": false
+  },
+  {
+    "id": 3,
+    "name": "GUI App for Psychologists",
+    "description": "Desktop application prototype in Python with adaptable forms for user data management.",
+    "technologies": ["Python", "Tkinter", "OOP", "Desktop"],
+    "githubUrl": "https://github.com/AdriaPascual/GUI",
+    "liveUrl": "",
+    "createdDate": "2023-02-09",
+    "isFeatured": false
+  },
+  {
+    "id": 4,
+    "name": "Walking Game",
+    "description": "2D game built in PyGame with sound effects, background music, and keyboard movement.",
+    "technologies": ["Python", "PyGame", "OOP"],
+    "githubUrl": "https://github.com/AdriaPascual/Walking_game",
+    "liveUrl": "",
+    "createdDate": "2023-02-09",
+    "isFeatured": true
+  },
+  {
+    "id": 5,
+    "name": "Spotify API Integration",
+    "description": "Integration with the Spotify API via OAuth, retrieving and storing user data in JSON format.",
+    "technologies": ["Python", "Spotify API", "OAuth", "JSON", "Requests"],
+    "githubUrl": "https://github.com/AdriaPascual/API_Spotify",
+    "liveUrl": "",
+    "createdDate": "2023-02-09",
+    "isFeatured": true
+  }
+]

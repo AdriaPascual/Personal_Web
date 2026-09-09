@@ -10,6 +10,13 @@ function langHeaders(): HeadersInit {
   return { 'Accept-Language': getLocale() };
 }
 
+// Static fallback JSON: 'es' keeps the original filename (no suffix), 'en'/'ca'
+// have their own translated file (profile.en.json, profile.ca.json, ...).
+function staticDataPath(base: string): string {
+  const locale = getLocale();
+  return locale === 'es' ? `/data/${base}.json` : `/data/${base}.${locale}.json`;
+}
+
 // Render's free tier sleeps after inactivity and can take 30-50s to wake up.
 // Without a timeout, a cold backend would leave the panel stuck on "loading"
 // instead of falling back to the static JSON almost instantly.
@@ -134,8 +141,8 @@ export async function getProfile(): Promise<Profile> {
     profileCache    = mapProfile(raw);
     experienceCache = mapExperience(raw);
   } else {
-    // API unavailable – fall back to static JSON (always ES locale)
-    profileCache = await (await fetch('/data/profile.json')).json() as Profile;
+    // API unavailable – fall back to static JSON in the current locale
+    profileCache = await (await fetch(staticDataPath('profile'))).json() as Profile;
   }
 
   return profileCache;
@@ -149,7 +156,7 @@ export async function getProjects(): Promise<Project[]> {
     const raw: ApiProject[] = await res.json();
     projectsCache = raw.map(mapProject);
   } else {
-    projectsCache = await (await fetch('/data/projects.json')).json();
+    projectsCache = await (await fetch(staticDataPath('projects'))).json();
   }
 
   return projectsCache!;
@@ -163,7 +170,7 @@ export async function getExperienceData(): Promise<ExperienceData> {
 
   if (!experienceCache) {
     // getProfile fell back to static JSON; load experience separately
-    experienceCache = await (await fetch('/data/experience.json')).json();
+    experienceCache = await (await fetch(staticDataPath('experience'))).json();
   }
 
   return experienceCache!;

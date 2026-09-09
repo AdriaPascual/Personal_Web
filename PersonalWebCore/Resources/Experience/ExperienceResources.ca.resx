@@ -27,4 +27,10 @@
   <data name="Position_TechSecurity" xml:space="preserve">
     <value>Tècnic en Seguretat Privada</value>
   </data>
+  <data name="Experience_UnlimiooDesc" xml:space="preserve">
+    <value>Desenvolupament i manteniment d'aplicacions web i d'escriptori basades en .NET Core i Python. Implementació d'APIs REST, optimització de consultes SQL, gestió de memòria cau i desenvolupament de serveis en segon pla. Integració d'APIs externes, desplegament amb Docker i disseny d'interfícies modernes amb Bootstrap i jQuery.</value>
+  </data>
+  <data name="Experience_ADDADesc" xml:space="preserve">
+    <value>Disseny, instal·lació i manteniment de sistemes electrònics aplicats a la seguretat, incloent-hi CCTV, control d'accessos i xarxes locals. Gestió de projectes tècnics i configuració de routers, switches i emmagatzematge al núvol.</value>
+  </data>
 </root>

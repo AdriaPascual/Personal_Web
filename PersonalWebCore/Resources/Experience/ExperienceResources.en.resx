@@ -27,4 +27,10 @@
   <data name="Position_TechSecurity" xml:space="preserve">
     <value>Private Security Technician</value>
   </data>
+  <data name="Experience_UnlimiooDesc" xml:space="preserve">
+    <value>Development and maintenance of web and desktop applications based on .NET Core and Python. Implementation of REST APIs, SQL query optimization, cache management, and background service development. Integration of external APIs, Docker-based deployment, and modern interface design with Bootstrap and jQuery.</value>
+  </data>
+  <data name="Experience_ADDADesc" xml:space="preserve">
+    <value>Design, installation, and maintenance of electronic security systems, including CCTV, access control, and local networks. Technical project management and configuration of routers, switches, and cloud storage.</value>
+  </data>
 </root>

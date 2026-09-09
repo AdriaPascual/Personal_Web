@@ -13,8 +13,10 @@ namespace PersonalWebCore.Services
                 new Project
                 {
                     Id = 1,
-                    Name = "Analysis of the Fast Food Dataset from Kaggle",
-                    Description = "Comprehensive data analysis and visualization using Python and Jupyter Notebook based on the Fast Food Dataset from Kaggle.",
+                    Name = TextHelpers.TextoTraducible("Proj1_Name", "Fast Food Dataset Analysis", "Projects"),
+                    Description = TextHelpers.TextoTraducible("Proj1_Desc",
+                        "Análisis exhaustivo de datos y visualización con Python y Jupyter Notebook sobre el dataset de Fast Food de Kaggle.",
+                        "Projects"),
                     ThumbnailUrl = "/assets/projects/fastfood-analysis.jpg",
                     Technologies = new List<string> { "Python", "Pandas", "Matplotlib", "Seaborn", "Jupyter Notebook" },
                     GithubUrl = "https://github.com/AdriaPascual/Analysis-of-the-Fast-Food-Dataset-from-Kaggle",
@@ -25,8 +27,10 @@ namespace PersonalWebCore.Services
                 new Project
                 {
                     Id = 2,
-                    Name = "Data Visualization Examples",
-                    Description = "Collection of Python notebooks demonstrating various data visualization techniques using libraries such as Matplotlib, Seaborn, and Plotly.",
+                    Name = TextHelpers.TextoTraducible("Proj2_Name", "Data Visualization Examples", "Projects"),
+                    Description = TextHelpers.TextoTraducible("Proj2_Desc",
+                        "Colección de notebooks Python con diversas técnicas de visualización de datos usando Matplotlib, Seaborn y Plotly.",
+                        "Projects"),
                     ThumbnailUrl = "/assets/projects/data-visualization-examples.jpg",
                     Technologies = new List<string> { "Python", "Matplotlib", "Seaborn", "Plotly", "Jupyter Notebook" },
                     GithubUrl = "https://github.com/AdriaPascual/data-visualization-examples",
@@ -37,8 +41,10 @@ namespace PersonalWebCore.Services
                 new Project
                 {
                     Id = 3,
-                    Name = "GUI Application for Psychologists",
-                    Description = "Desktop application prototype built in Python designed for psychologists (e.g.) to handle adaptable forms and user data.",
+                    Name = TextHelpers.TextoTraducible("Proj3_Name", "GUI App for Psychologists", "Projects"),
+                    Description = TextHelpers.TextoTraducible("Proj3_Desc",
+                        "Prototipo de aplicación de escritorio en Python con formularios adaptables para gestión de datos de usuarios.",
+                        "Projects"),
                     ThumbnailUrl = "/assets/projects/gui-app.jpg",
                     Technologies = new List<string> { "Python", "Tkinter", "OOP", "Desktop" },
                     GithubUrl = "https://github.com/AdriaPascual/GUI",
@@ -49,8 +55,10 @@ namespace PersonalWebCore.Services
                 new Project
                 {
                     Id = 4,
-                    Name = "Walking Game",
-                    Description = "A small 2D game made with PyGame that includes sound effects, background music, and keyboard-controlled movements.",
+                    Name = TextHelpers.TextoTraducible("Proj4_Name", "Walking Game", "Projects"),
+                    Description = TextHelpers.TextoTraducible("Proj4_Desc",
+                        "Juego 2D en PyGame con efectos de sonido, música de fondo y movimiento por teclado.",
+                        "Projects"),
                     ThumbnailUrl = "/assets/projects/walking-game.jpg",
                     Technologies = new List<string> { "Python", "PyGame", "OOP" },
                     GithubUrl = "https://github.com/AdriaPascual/Walking_game",
@@ -61,8 +69,10 @@ namespace PersonalWebCore.Services
                 new Project
                 {
                     Id = 5,
-                    Name = "Spotify API Integration",
-                    Description = "Sample project integrating with the Spotify API via OAuth authentication, retrieving and storing user data in JSON format.",
+                    Name = TextHelpers.TextoTraducible("Proj5_Name", "Spotify API Integration", "Projects"),
+                    Description = TextHelpers.TextoTraducible("Proj5_Desc",
+                        "Integración con la API de Spotify via OAuth, recuperando y almacenando datos de usuario en formato JSON.",
+                        "Projects"),
                     ThumbnailUrl = "/assets/projects/api-spotify.jpg",
                     Technologies = new List<string> { "Python", "Spotify API", "OAuth", "JSON", "Requests" },
                     GithubUrl = "https://github.com/AdriaPascual/API_Spotify",
