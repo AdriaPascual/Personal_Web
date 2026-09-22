@@ -20,11 +20,6 @@
     Strict-Transport-Security   = "max-age=63072000; includeSubDomains; preload"
 
 [[headers]]
-  for = "/data/*"
-  [headers.values]
-    Cache-Control = "public, max-age=86400"
-
-[[headers]]
   for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
