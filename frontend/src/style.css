@@ -177,6 +177,36 @@ html, body {
   margin-top: 0.5rem;
 }
 
+/* ── Articles ── */
+.article-item { padding: 0 0.1rem; }
+
+.article-title {
+  font-size: 1.05rem;
+  color: #e94560;
+  margin-bottom: 0.3rem;
+}
+
+.article-date {
+  font-size: 0.72rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.9rem;
+}
+
+.article-paragraph {
+  font-size: 0.85rem;
+  color: #ccc;
+  line-height: 1.65;
+  margin-bottom: 0.9rem;
+}
+
+.article-divider {
+  border: none;
+  border-top: 1px solid #e9456044;
+  margin: 1.5rem 0;
+}
+
 .tag {
   background: #0f3460;
   color: #e0e0e0;

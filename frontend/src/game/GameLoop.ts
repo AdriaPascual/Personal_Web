@@ -17,7 +17,7 @@ const BUILDINGS: BuildingDef[] = [
   { type: 'contact',   col: 3,  row: 11 },
   { type: 'projects',  col: 11, row: 11 },
   { type: 'unlimioo',  col: 23, row: 11, kind: 'link', url: 'https://www.unlimioo.com/', featured: true },
-  { type: 'articles',  col: 15, row: 7,  kind: 'wip' },
+  { type: 'articles',  col: 15, row: 7  },
 ];
 
 const CAM_Y  = 11;

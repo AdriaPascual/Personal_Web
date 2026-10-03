@@ -1,5 +1,5 @@
 import { getLocale, type Locale } from '../i18n';
-import type { Profile, Project, ExperienceData } from '../types';
+import type { Profile, Project, ExperienceData, ArticleItem } from '../types';
 
 // Contenido estático (perfil, proyectos, experiencia) importado directamente en vez
 // de servido por fetch: Vite lo empaqueta dentro del propio JS, así que está
@@ -16,10 +16,14 @@ import projectsCa from '../data/projects.ca.json';
 import experienceEs from '../data/experience.es.json';
 import experienceEn from '../data/experience.en.json';
 import experienceCa from '../data/experience.ca.json';
+import articlesEs from '../data/articles.es.json';
+import articlesEn from '../data/articles.en.json';
+import articlesCa from '../data/articles.ca.json';
 
 const PROFILE_BY_LOCALE: Record<Locale, Profile> = { es: profileEs, en: profileEn, ca: profileCa };
 const PROJECTS_BY_LOCALE: Record<Locale, Project[]> = { es: projectsEs, en: projectsEn, ca: projectsCa };
 const EXPERIENCE_BY_LOCALE: Record<Locale, ExperienceData> = { es: experienceEs, en: experienceEn, ca: experienceCa };
+const ARTICLES_BY_LOCALE: Record<Locale, ArticleItem[]> = { es: articlesEs, en: articlesEn, ca: articlesCa };
 
 // Se mantienen como funciones async (aunque ya no haya nada asíncrono que esperar)
 // para no tener que tocar los paneles que ya hacen await getProfile(), etc.
@@ -33,4 +37,8 @@ export async function getProjects(): Promise<Project[]> {
 
 export async function getExperienceData(): Promise<ExperienceData> {
   return EXPERIENCE_BY_LOCALE[getLocale()];
+}
+
+export async function getArticles(): Promise<ArticleItem[]> {
+  return ARTICLES_BY_LOCALE[getLocale()];
 }

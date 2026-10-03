@@ -5,6 +5,7 @@ import { renderCV }       from './panels/CVPanel';
 import { renderProjects } from './panels/ProjectsPanel';
 import { renderContact, attachContactFormHandler } from './panels/ContactPanel';
 import { renderGitHub }   from './panels/GitHubPanel';
+import { renderArticles } from './panels/ArticlesPanel';
 import { renderLanguagePanel, attachLanguageHandler } from './panels/LanguagePanel';
 
 const TITLE_KEY: Record<ModalBuildingType, string> = {
@@ -13,6 +14,7 @@ const TITLE_KEY: Record<ModalBuildingType, string> = {
   projects:  'panel.projects',
   contact:   'panel.contact',
   github:    'panel.github',
+  articles:  'panel.articles',
   languages: 'panel.languages',
 };
 
@@ -73,6 +75,7 @@ export class UIManager {
         case 'projects':  html = await renderProjects();  break;
         case 'contact':   html = renderContact();         break;
         case 'github':    html = await renderGitHub();    break;
+        case 'articles':  html = await renderArticles();  break;
         case 'languages': html = renderLanguagePanel();   break;
       }
       content.innerHTML = html;

@@ -50,6 +50,13 @@ export interface ExperienceData {
   education: EducationItem[];
 }
 
+export interface ArticleItem {
+  id: number;
+  title: string;
+  date: string;
+  body: string[];
+}
+
 export interface GitHubRepo {
   name: string;
   description: string | null;
@@ -60,4 +67,4 @@ export interface GitHubRepo {
 }
 
 export type BuildingType = 'about' | 'cv' | 'projects' | 'contact' | 'github' | 'linkedin' | 'unlimioo' | 'articles' | 'languages';
-export type ModalBuildingType = Extract<BuildingType, 'about' | 'cv' | 'projects' | 'contact' | 'github' | 'languages'>;
+export type ModalBuildingType = Extract<BuildingType, 'about' | 'cv' | 'projects' | 'contact' | 'github' | 'articles' | 'languages'>;
